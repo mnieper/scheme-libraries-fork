@@ -2,7 +2,7 @@
 
 ;;; Copyright © Marc Nieper-Wißkirchen (2023).
 
-(Library (scheme-libraries ports)
+(library (scheme-libraries ports)
   (export
     textual-input-port?
     textual-output-port?)

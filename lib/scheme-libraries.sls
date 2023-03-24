@@ -15,6 +15,9 @@
     symbolic-identifier=?
     with-implicit
 
+    ;; (scheme-libraries atom)
+    atom?
+
     ;; (scheme-libraries basic-format-strings)
     format
 
@@ -47,6 +50,48 @@
     textual-input-port?
     textual-output-port?
 
+    ;; (scheme-libraries reading annotated-datums)
+    annotated-datum?
+    annotated-datum-source-location
+    annotated-datum-value
+    make-annotated-atom
+    annotated-atom?
+    make-annotated-pair
+    annotated-pair?
+    annotated-pair-car
+    annotated-pair-cdr
+    make-annotated-list
+    make-annotated-vector
+    annotated-vector?
+    annotated-vector-ref
+
+    ;; (scheme-libraries reading lexemes)
+    lexeme?
+    lexeme-start
+    lexeme-end
+    make-end-of-input
+    end-of-input?
+    make-atomic
+    atomic?
+    atomic-value
+    make-left-parenthesis
+    left-parenthesis?
+    make-right-parenthesis
+    right-parenthesis?
+    make-left-bracket
+    left-bracket?
+    make-right-bracket
+    right-bracket?
+    make-vector-prefix
+    vector-prefix?
+    make-bytevector-prefix
+    bytevector-prefix?
+    make-abbreviation
+    abbreviation?
+    abbreviation-symbol
+    make-dot
+    dot?
+
     ;; (scheme-libraries reading positions)
     make-position
     position?
@@ -71,6 +116,7 @@
     ;; (scheme-libraries record-writer)
     record-writer)
   (import
+    (scheme-libraries atom)
     (scheme-libraries basic-format-strings)
     (scheme-libraries define-auxiliary-syntax)
     (scheme-libraries define-who)
@@ -82,6 +128,8 @@
     (scheme-libraries match)
     (scheme-libraries numbers)
     (scheme-libraries ports)
+    (scheme-libraries reading annotated-datums)
+    (scheme-libraries reading lexemes)
     (scheme-libraries reading positions)
     (scheme-libraries reading source-locations)
     (scheme-libraries record-writer)
