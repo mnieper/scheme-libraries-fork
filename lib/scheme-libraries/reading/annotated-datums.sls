@@ -14,6 +14,7 @@
     annotated-pair-car
     annotated-pair-cdr
     make-annotated-list
+    make-annotated-dotted-list
     make-annotated-vector
     annotated-vector?
     annotated-vector-ref)
@@ -75,6 +76,28 @@
            (cons (annotated-datum-value element)
                  (annotated-datum-value annotated-list))))
         (make-annotated-atom '() source-location)
+        element*)))
+
+  (define/who make-annotated-dotted-list
+     (lambda (element* element source-location)
+       (unless (and (list? element*)
+                    (for-all annotated-datum? element*))
+         (assertion-violation who "invalid element list argument" element*))
+       (unless (annotated-datum? element)
+         (assertion-violation who "invalid element argument" element))
+       (unless
+           (or (not source-location)
+               (source-location? source-location))
+         (assertion-violation who "invalid source-location argument" source-location))
+       (fold-right
+        (lambda (element annotated-list)
+          (make-annotated-datum
+           (cons element
+                 annotated-list)
+           source-location
+           (cons (annotated-datum-value element)
+                 (annotated-datum-value annotated-list))))
+        element
         element*)))
 
   (define/who make-annotated-vector

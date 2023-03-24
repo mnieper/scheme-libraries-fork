@@ -28,6 +28,11 @@
     ;; (scheme-libraries filenames)
     filename?
 
+    ;; (scheme-libraries format-conditions)
+    &format
+    make-format-condition
+    format-condition?
+
     ;; (scheme-libraries lists)
     length+
     split-at
@@ -61,6 +66,7 @@
     annotated-pair-car
     annotated-pair-cdr
     make-annotated-list
+    make-annotated-dotted-list
     make-annotated-vector
     annotated-vector?
     annotated-vector-ref
@@ -101,6 +107,11 @@
     position-columns
     position-tabulator
 
+    ;; (scheme-libraries reading readers)
+    make-reader
+    reader?
+    reader-get-annotated-datum
+
     ;; (scheme-libraries reading source-locations)
     make-source-location
     source-location?
@@ -113,8 +124,21 @@
     condition-source-location
     display-source-location
 
+    ;; (scheme-libraries reading tokenizers)
+    make-tokenizer
+    tokenizer?
+    tokenizer-get-lexeme
+    tokenizer-lexical-error
+    &lexical-error
+    make-lexical-error
+    lexical-error?
+
     ;; (scheme-libraries record-writer)
-    record-writer)
+    record-writer
+
+    ;; (scheme-libraries unicode)
+    unicode-scalar-value?
+    unicode-width)
   (import
     (scheme-libraries atom)
     (scheme-libraries basic-format-strings)
@@ -123,6 +147,7 @@
     (scheme-libraries define-values)
     (scheme-libraries exceptions)
     (scheme-libraries filenames)
+    (scheme-libraries format-conditions)
     (scheme-libraries helpers)
     (scheme-libraries lists)
     (scheme-libraries match)
@@ -131,8 +156,11 @@
     (scheme-libraries reading annotated-datums)
     (scheme-libraries reading lexemes)
     (scheme-libraries reading positions)
+    (scheme-libraries reading readers)
     (scheme-libraries reading source-locations)
+    (scheme-libraries reading tokenizers)
     (scheme-libraries record-writer)
     (scheme-libraries parameters)
     (scheme-libraries thread-parameters)
+    (scheme-libraries unicode)
     (scheme-libraries with-implicit)))
