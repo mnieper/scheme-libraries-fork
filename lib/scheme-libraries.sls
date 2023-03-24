@@ -40,6 +40,15 @@
     exact-nonnegative-integer?
     nonnegative-fixnum?
 
+    ;; (scheme-libraries reading positions)
+    make-position
+    position?
+    position-line
+    position-column
+    position-lines
+    position-columns
+    position-tabulator
+
     ;; (scheme-libraries record-writer)
     record-writer)
   (import
@@ -53,6 +62,7 @@
     (scheme-libraries lists)
     (scheme-libraries match)
     (scheme-libraries numbers)
+    (scheme-libraries reading positions)
     (scheme-libraries record-writer)
     (scheme-libraries thread-parameters)
     (scheme-libraries with-implicit)))
