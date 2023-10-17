@@ -26,37 +26,70 @@
             (lambda (id)
               (and ell
                    (bound-identifier=? id ell))))
+          (define actual-ellipsis?
+            (lambda (id)
+              ;; TODO: Speed up test.
+              (and (identifier? id)
+                   (if ell
+                       (and (not (find ell lit*))
+                            (custom-ellipsis? id))
+                       (and (not (find ellipsis? lit*))
+                            (ellipsis? id))))))
           (define maybe-replace-literal*
-            (lambda (ell? ell pat* guard**)
-              (if (find ell? lit*)
-                  (with-syntax ([(tmp) (generate-temporaries #'(tmp))]
-                                [ell ell])
-                    (values (map (lambda (pat)
-                                   (replace #'ell #'tmp pat))
-                                 pat*)
-                            (map (lambda (guard*)
-                                   #`((free-identifier=? #'tmp #'ell) #,@guard*))
-                                 guard**)))
+            (lambda (lit? lit pat* guard**)
+              (define replace-literal
+                (lambda (pat guard*)
+                  (let-values ([(pat guards)
+                                (replace-in-pattern lit pat)])
+                    (values pat
+                            #`(#,@guard* #,@guards)))))
+              (if (find lit? lit*)
+                  (let f ([pat* pat*] [guard** guard**])
+                    (if (null? pat*)
+                        (values '() '())
+                        (let-values ([(pat guard*)
+                                      (replace-literal (car pat*) (car guard**))]
+                                     [(pat* guard**)
+                                      (f (cdr pat*) (cdr guard**))])
+                          (values (cons pat pat*)
+                                  (cons guard* guard**)))))
                   (values pat* guard**))))
-          (define replace
-            ;; FIXME: "old" can be more than once in pattern.
-            ;; Moreover, "old" can appear at higher depths.  So, we
-            ;; have to return the new pattern together with a list of
-            ;; new temporaries together with their depths.
-            ;; NOTE: We have to count actual ellipses to get at the depths.
-            (lambda (old new pat)
-              (let f ([pat pat])
+          (define replace-in-pattern
+            (lambda (id pat)
+              (let f ([pat pat] [depth #'()])
                 (syntax-case pat ()
                   [(x . y)
-                   (cons (f #'x) (f #'y))]
+                   (let g ([y #'y] [depthx depth])
+                     (syntax-case y ()
+                       [(::: . y)
+                        (actual-ellipsis? #':::)
+                        (g #'y #`((... ...) #,@depthx))]
+                       [y
+                        (let-values ([(x guardsx) (f #'x depthx)]
+                                     [(y guardsy) (f #'y depth)])
+                          (values #`(#,x #;ELLIPSES!!! . #,y
+                                                       )
+                                  (append guardsx guardsy)))]))]
                   [#(x ...)
-                   (vector-map f #'#(x ...))]
+                   (let-values ([(x* guards) (f #'(x ...) depth)])
+                     (values #`#(#,@x*) guards))]
                   [x
                    (identifier? #'x)
-                   (if (bound-identifier=? #'x old)
-                       new
-                       #'x)]
-                  [x #'x]))))
+                   ;; FIXME: bound-identifier=? does not yet work
+                   ;; here.  #'x is from the user; id from us.  We
+                   ;; must use id from them! (=> It appears in the
+                   ;; literals.  For each free-id=? to _ or ell, we
+                   ;; must do this translation!
+                   (if (bound-identifier=? #'x id)
+                       (and (assert #f)
+                            (with-syntax ([(tmp) (generate-temporaries #'(tmp))])
+                              (values #'tmp
+                                      ;; XXX: Do we need quote-syntax here for ID here?
+                                      ;; The user could have bound ID to a pattern variable.
+                                      #`(for-all (lambda (e) (free-identifier=? e #'(... #,id)))
+                                                 #'(tmp #,@depth)))))
+                       (values #'x '()))]
+                  [x (values #'x '())]))))
           (let ([guard** (map (lambda (pat) '()) pat*)])
             (let*-values ([(pat* guard**) (maybe-replace-literal* ellipsis? #'(... ...) pat* guard** )]
                           [(pat* guard**) (maybe-replace-literal* underscore? #'_ pat* guard**)]

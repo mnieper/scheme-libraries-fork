@@ -22,5 +22,13 @@
       (syntax->datum #'(a b 4))])
    #'(a 2 3)))
 
+(test-equal '(c 3 4)
+  ((syntax-rules (_)
+     [(foo a b)
+      (syntax->datum #'(a b 4))]
+     [(foo _ b)
+      (syntax->datum #'(c b 4))])
+   #'(a 2 3)))
+
 
 (test-end "r7rs")
