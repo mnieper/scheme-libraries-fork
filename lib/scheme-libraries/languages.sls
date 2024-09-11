@@ -10,17 +10,10 @@
           (scheme-libraries define-who)
           (scheme-libraries languages $meta))
 
-  (define-language L
-    ((x (...))
-     (y (...))
-     (z (...)))
-    (Expr (...)
-      dddd))
-
   (define-syntax/who define-language
     (lambda (stx)
       (syntax-case stx ()
-        [(_ language-name  clause ...)
+        [(_ language-name clause ...)
          (identifier? #'language-name)
          (with-syntax ([language (parse-language-clauses who stx #'(clause ...))])
            #'(define-syntax/who language-name (make-language-transformer who #'language-name #'language)))]

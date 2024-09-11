@@ -51,6 +51,8 @@ coloring graphs, suitable in register allocators.
 
 ** Impure programming
 
+** Languages
+
 ** Lists
 
 ** Macros

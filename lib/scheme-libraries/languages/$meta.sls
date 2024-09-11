@@ -13,14 +13,18 @@
   (import
     (rnrs)
     (scheme-libraries define-auxiliary-syntax)
-    (scheme-libraries multiple-values))
+    (scheme-libraries define-values)
+    (scheme-libraries helpers)
+    (scheme-libraries macros)
+    (scheme-libraries multiple-values)
+    (scheme-libraries vectors))
 
   ;; Languages
 
   (define-record-type language
     (nongenerative language-a3c7502b-9fe1-455c-81cb-6e7143cbd40e)
     (sealed #t)
-    (fields symbols terminals))
+    (fields symbols))
 
   (define-record-type terminal
     (nongenerative terminal-dba3bee3-8440-48f0-b941-7df287189684)
@@ -39,22 +43,22 @@
       (define terminal*
         (vector-fold-right (lambda (i sym bdg terminals)
                              (cons-if (terminal? bdg) bdg terminals))
-                           symbols bindings))
+                           '() symbols bindings))
       (define terminal-symbol*
         (vector-fold-right (lambda (i sym bdg terminals)
                              (cons-if (terminal? bdg) (datum->syntax #'* sym) terminals))
-                           symbols bindings))
+                           '() symbols bindings))
       (define terminal-predicate* (map terminal-predicate terminal*))
       (define terminal-meta-var**
         (map (lambda (terminal)
                (vector-fold-right (lambda (i sym bdg meta-vars)
                                     (cons-if (and (meta-var? bdg) (eqv? (meta-var-type bdg) terminal)) sym meta-vars))
-                                  symbols bindings))
+                                  '() symbols bindings))
              terminal*))
       (with-syntax ([(terminal-symbol ...) terminal-symbol*]
                     [(terminal-predicate ...) terminal-predicate*]
-                    [((meta-var ...) ...) terminal-meta-var**])
-        #'(((terminal-symbol terminal-predicate (terminal-meta-var* ...)) ...)))))
+                    [((terminal-meta-var ...) ...) terminal-meta-var**])
+        #'(((terminal-symbol terminal-predicate (terminal-meta-var ...)) ...)))))
 
   (define-auxiliary-syntax terminals)
 
@@ -76,9 +80,9 @@
   (define parse-language-clauses
     (lambda (who stx clause*)
       (define-values-map (terminal-clause* nonterminal-clause*)
-        (lambda (clause) (parse-language-clause who stx clause)) clause*)
+        (lambda (cl) (parse-language-clause who stx cl)) clause*)
       (define-values-map (terminal-symbol* terminal-meta-var**)
-        (map (clause) (parse-terminal-clause who stx clause terminal-clause*)))
+        (lambda (cl) (parse-terminal-clause who stx cl)) terminal-clause*)
       (define terminal-predicate*
         (map (lambda (symbol) (construct-name symbol symbol "?")) terminal-symbol*))
       (define symbols (make-symbol-hashtable))
@@ -102,7 +106,7 @@
 
   (define parse-language-clause
     (lambda (who stx clause)
-      (syntax-case stx (terminals)
+      (syntax-case clause (terminals)
         [(terminals terminal-clause ...)
          (values #'(terminal-clause ...) '())]
         [nonterminal-clause
@@ -110,7 +114,7 @@
 
   (define parse-terminal-clause
     (lambda (who stx clause)
-      (syntax-case stx ()
+      (syntax-case clause ()
         [(symbol (meta-var ...))
          (for-all identifier? #'(symbol meta-var ...))
          (values #'symbol #'(meta-var ...))]

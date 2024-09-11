@@ -81,6 +81,11 @@
     increment!
     prepend!
 
+    ;; (scheme-libraries languages)
+    define-language
+    language->datum
+    terminals
+
     ;; (scheme-libraries lists)
     last
     iota
@@ -272,6 +277,7 @@
     (scheme-libraries heaps)
     (scheme-libraries helpers)
     (scheme-libraries impure)
+    (scheme-libraries languages)
     (scheme-libraries lists)
     (scheme-libraries macros)
     (scheme-libraries match)
