@@ -46,14 +46,14 @@
                            '() symbols bindings))
       (define terminal-symbol*
         (vector-fold-right (lambda (i sym bdg terminals)
-                             (cons-if (terminal? bdg) (datum->syntax #'* sym) terminals))
+                             (cons-if (terminal? bdg) (syntactify sym) terminals))
                            '() symbols bindings))
       (define terminal-predicate* (map terminal-predicate terminal*))
       (define terminal-meta-var**
         (map (lambda (terminal)
                (vector-fold-right (lambda (i sym bdg meta-vars)
                                     (cons-if (and (meta-var? bdg) (eqv? (meta-var-type bdg) terminal))
-                                             (datum->syntax #'* sym) meta-vars))
+                                             (syntactify sym) meta-vars))
                                   '() symbols bindings))
              terminal*))
       (with-syntax ([(terminal-symbol ...) terminal-symbol*]

@@ -1,0 +1,186 @@
+---
+generation: 1
+last_run_time: 1726068280.65086
+tests:
+  tests/test-boxes.sps:
+    elapsed: 0.197773933410645
+    gen: 1
+    last_pass_time: 1726068280.29636
+    last_result: 0
+    last_run_time: 1726068280.29636
+    last_todo: 0
+    seq: 2
+    total_passes: 1
+  tests/test-define-values.sps:
+    elapsed: 0.201011180877686
+    gen: 1
+    last_pass_time: 1726068280.30086
+    last_result: 0
+    last_run_time: 1726068280.30086
+    last_todo: 0
+    seq: 3
+    total_passes: 1
+  tests/test-graph-coloring.sps:
+    elapsed: 0.245230913162231
+    gen: 1
+    last_pass_time: 1726068280.34618
+    last_result: 0
+    last_run_time: 1726068280.34618
+    last_todo: 0
+    seq: 7
+    total_passes: 1
+  tests/test-heaps.sps:
+    elapsed: 0.266438961029053
+    gen: 1
+    last_pass_time: 1726068280.36845
+    last_result: 0
+    last_run_time: 1726068280.36845
+    last_todo: 0
+    seq: 8
+    total_passes: 1
+  tests/test-helpers.sps:
+    elapsed: 0.200662136077881
+    gen: 1
+    last_pass_time: 1726068280.30387
+    last_result: 0
+    last_run_time: 1726068280.30387
+    last_todo: 0
+    seq: 4
+    total_passes: 1
+  tests/test-lists.sps:
+    elapsed: 0.216254949569702
+    gen: 1
+    last_pass_time: 1726068280.32084
+    last_result: 0
+    last_run_time: 1726068280.32084
+    last_todo: 0
+    seq: 6
+    total_passes: 1
+  tests/test-macros.sps:
+    elapsed: 0.184564113616943
+    gen: 1
+    last_pass_time: 1726068280.29158
+    last_result: 0
+    last_run_time: 1726068280.29158
+    last_todo: 0
+    seq: 1
+    total_passes: 1
+  tests/test-match.sps:
+    elapsed: 0.346758842468262
+    gen: 1
+    last_pass_time: 1726068280.45655
+    last_result: 0
+    last_run_time: 1726068280.45655
+    last_todo: 0
+    seq: 9
+    total_passes: 1
+  tests/test-multiple-values.sps:
+    elapsed: 0.206055879592896
+    gen: 1
+    last_pass_time: 1726068280.31821
+    last_result: 0
+    last_run_time: 1726068280.31821
+    last_todo: 0
+    seq: 5
+    total_passes: 1
+  tests/test-numbers.sps:
+    elapsed: 0.201524019241333
+    gen: 1
+    last_pass_time: 1726068280.49772
+    last_result: 0
+    last_run_time: 1726068280.49772
+    last_todo: 0
+    seq: 11
+    total_passes: 1
+  tests/test-quasiquote.sps:
+    elapsed: 0.281054973602295
+    gen: 1
+    last_pass_time: 1726068280.58104
+    last_result: 0
+    last_run_time: 1726068280.58104
+    last_todo: 0
+    seq: 16
+    total_passes: 1
+  tests/test-quote-syntax.sps:
+    elapsed: 0.183701992034912
+    gen: 1
+    last_pass_time: 1726068280.48732
+    last_result: 0
+    last_run_time: 1726068280.48732
+    last_todo: 0
+    seq: 10
+    total_passes: 1
+  tests/test-r7rs.sps:
+    elapsed: 0.216313123703003
+    gen: 1
+    last_pass_time: 1726068280.53395
+    last_result: 0
+    last_run_time: 1726068280.53395
+    last_todo: 0
+    seq: 12
+    total_passes: 1
+  tests/test-reading.sps:
+    elapsed: 0.304715871810913
+    gen: 1
+    last_pass_time: 1726068280.62521
+    last_result: 0
+    last_run_time: 1726068280.62521
+    last_todo: 0
+    seq: 18
+    total_passes: 1
+  tests/test-strings.sps:
+    elapsed: 0.191622018814087
+    gen: 1
+    last_pass_time: 1726068280.53551
+    last_result: 0
+    last_run_time: 1726068280.53551
+    last_todo: 0
+    seq: 13
+    total_passes: 1
+  tests/test-syntactic-monads.sps:
+    elapsed: 0.192736864089966
+    gen: 1
+    last_pass_time: 1726068280.56014
+    last_result: 0
+    last_run_time: 1726068280.56014
+    last_todo: 0
+    seq: 14
+    total_passes: 1
+  tests/test-trees.sps:
+    elapsed: 0.196804046630859
+    gen: 1
+    last_pass_time: 1726068280.57496
+    last_result: 0
+    last_run_time: 1726068280.57496
+    last_todo: 0
+    seq: 15
+    total_passes: 1
+  tests/test-vectors.sps:
+    elapsed: 0.152630090713501
+    gen: 1
+    last_pass_time: 1726068280.61222
+    last_result: 0
+    last_run_time: 1726068280.61222
+    last_todo: 0
+    seq: 17
+    total_passes: 1
+  tests/test-with-implicit.sps:
+    elapsed: 0.143271923065186
+    gen: 1
+    last_pass_time: 1726068280.63404
+    last_result: 0
+    last_run_time: 1726068280.63404
+    last_todo: 0
+    seq: 19
+    total_passes: 1
+  tests/test-worklists.sps:
+    elapsed: 0.145155906677246
+    gen: 1
+    last_pass_time: 1726068280.65042
+    last_result: 0
+    last_run_time: 1726068280.65042
+    last_todo: 0
+    seq: 20
+    total_passes: 1
+version: 1
+...
