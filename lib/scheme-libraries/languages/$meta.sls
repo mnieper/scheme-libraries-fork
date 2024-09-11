@@ -38,10 +38,23 @@
         (hashtable-entries (language-symbols lang)))
       (define terminal*
         (vector-fold-right (lambda (i sym bdg terminals)
-                             (cons-if (terminal? bdg) sym terminals))
+                             (cons-if (terminal? bdg) bdg terminals))
                            symbols bindings))
-      (with-syntax ([(terminal ...) (terminal* ...)])
-        #'(((terminal ()) ...)))))
+      (define terminal-symbol*
+        (vector-fold-right (lambda (i sym bdg terminals)
+                             (cons-if (terminal? bdg) (datum->syntax #'* sym) terminals))
+                           symbols bindings))
+      (define terminal-predicate* (map terminal-predicate terminal*))
+      (define terminal-meta-var**
+        (map (lambda (terminal)
+               (vector-fold-right (lambda (i sym bdg meta-vars)
+                                    (cons-if (and (meta-var? bdg) (eqv? (meta-var-type bdg) terminal)) sym meta-vars))
+                                  symbols bindings))
+             terminal*))
+      (with-syntax ([(terminal-symbol ...) terminal-symbol*]
+                    [(terminal-predicate ...) terminal-predicate*]
+                    [((meta-var ...) ...) terminal-meta-var**])
+        #'(((terminal-symbol terminal-predicate (terminal-meta-var* ...)) ...)))))
 
   (define-auxiliary-syntax terminals)
 
@@ -54,8 +67,9 @@
         (lambda (stx)
           (syntax-case stx ($language->datum)
             [(_ $language->datum)
-             (with-syntax ([e #'(define-language name)])
-               #''e)]
+             (with-syntax ([(((terminal-symbol terminal-predicate (terminal-meta-var ...)) ...)) #'language])
+               #''(define-language name
+                    (terminals (terminal-symbol (terminal-meta-var ...)) ...)))]
             [_
              (syntax-violation who "invalid use of language" stx)])))))
 
@@ -65,17 +79,26 @@
         (lambda (clause) (parse-language-clause who stx clause)) clause*)
       (define-values-map (terminal-symbol* terminal-meta-var**)
         (map (clause) (parse-terminal-clause who stx clause terminal-clause*)))
-      (define terminal-predicate
+      (define terminal-predicate*
         (map (lambda (symbol) (construct-name symbol symbol "?")) terminal-symbol*))
-      (with-syntax ([(terminal-symbol ...) terminal-symbol*]
-                    [(terminal-predicate ...) terminal-predicate*]
-                    [((terminal-meta-var ...) ...) terminal-meta-var**])
-        #'((terminal-symbol ...))
-
-        )
-
-
-      ))
+      (define symbols (make-symbol-hashtable))
+      (define symbol-insert!
+        (lambda (id bdg)
+          (define sym (syntax->datum id))
+          (when (hashtable-contains? symbols sym)
+            (syntax-violation who "duplicate symbol in language definition" stx id))
+          (hashtable-set! symbols id bdg)))
+      (for-each
+       (lambda (sym pred mvar*)
+         (define terminal (make-terminal pred))
+         (symbol-insert! sym terminal)
+         (for-each
+          (lambda (mvar)
+            (symbol-insert! mvar terminal))
+          mvar*))
+       terminal-symbol* terminal-predicate* terminal-meta-var**)
+      (let ([lang (make-language symbols)])
+        (language->syntax lang))))
 
   (define parse-language-clause
     (lambda (who stx clause)
@@ -92,10 +115,9 @@
          (for-all identifier? #'(symbol meta-var ...))
          (values #'symbol #'(meta-var ...))]
         [_ (syntax-violation who "invalid terminal clause" stx clause)])))
+
+  (define make-symbol-hashtable
+    (lambda ()
+      (make-hashtable symbol-hash symbol=?)))
+
   )
-
-
-(receive-map (x* y*) (<proc> ...)
-  <body>)
-
-(define-values-map (x* y*) <proc> ... ..)
