@@ -52,7 +52,8 @@
       (define terminal-meta-var**
         (map (lambda (terminal)
                (vector-fold-right (lambda (i sym bdg meta-vars)
-                                    (cons-if (and (meta-var? bdg) (eqv? (meta-var-type bdg) terminal)) sym meta-vars))
+                                    (cons-if (and (meta-var? bdg) (eqv? (meta-var-type bdg) terminal))
+                                             (datum->syntax #'* sym) meta-vars))
                                   '() symbols bindings))
              terminal*))
       (with-syntax ([(terminal-symbol ...) terminal-symbol*]
@@ -79,7 +80,7 @@
 
   (define parse-language-clauses
     (lambda (who stx clause*)
-      (define-values-map (terminal-clause* nonterminal-clause*)
+      (define-values-append-map (terminal-clause* nonterminal-clause*)
         (lambda (cl) (parse-language-clause who stx cl)) clause*)
       (define-values-map (terminal-symbol* terminal-meta-var**)
         (lambda (cl) (parse-terminal-clause who stx cl)) terminal-clause*)
@@ -91,14 +92,14 @@
           (define sym (syntax->datum id))
           (when (hashtable-contains? symbols sym)
             (syntax-violation who "duplicate symbol in language definition" stx id))
-          (hashtable-set! symbols id bdg)))
+          (hashtable-set! symbols sym bdg)))
       (for-each
        (lambda (sym pred mvar*)
          (define terminal (make-terminal pred))
          (symbol-insert! sym terminal)
          (for-each
           (lambda (mvar)
-            (symbol-insert! mvar terminal))
+            (symbol-insert! mvar (make-meta-var terminal)))
           mvar*))
        terminal-symbol* terminal-predicate* terminal-meta-var**)
       (let ([lang (make-language symbols)])
