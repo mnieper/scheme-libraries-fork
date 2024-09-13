@@ -77,7 +77,4 @@
       (put-string (assembly-output-port)
                   (format "\t~a\t~a~%"
                           key
-                          (target->string target)))))
-
-
-  )
+                          (target->string target))))))
